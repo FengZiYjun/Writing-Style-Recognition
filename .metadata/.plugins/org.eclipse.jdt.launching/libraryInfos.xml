@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<libraryInfos>
+<libraryInfo home="D:\java-neon\Java" version="1.8.0_131">
+<bootpath>
+<entry path="D:\java-neon\Java\lib\resources.jar"/>
+<entry path="D:\java-neon\Java\lib\rt.jar"/>
+<entry path="D:\java-neon\Java\lib\sunrsasign.jar"/>
+<entry path="D:\java-neon\Java\lib\jsse.jar"/>
+<entry path="D:\java-neon\Java\lib\jce.jar"/>
+<entry path="D:\java-neon\Java\lib\charsets.jar"/>
+<entry path="D:\java-neon\Java\lib\jfr.jar"/>
+<entry path="D:\java-neon\Java\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="D:\java-neon\Java\lib\ext"/>
+<entry path="C:\WINDOWS\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="D:\java-neon\Java\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+</libraryInfos>

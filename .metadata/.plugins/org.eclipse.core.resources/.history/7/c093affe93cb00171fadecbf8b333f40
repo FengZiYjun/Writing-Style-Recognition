@@ -1,0 +1,44 @@
+package test;
+import java.awt.List;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import org.fnlp.nlp.cn.CNFactory;
+import org.fnlp.nlp.parser.dep.DependencyTree;
+import org.fnlp.util.exception.LoadModelException;
+
+public class Test {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		final String PATH = "D:\\Courses\\NLP\\LAB\\Corpus\\Â³Ñ¸È«¼¯\\test.txt";
+		String text = new String();
+		ArrayList<java.util.List<String>> result;
+		Map<String, int> counter = new Map<String, int>();
+		
+		try {
+			Scanner in = new Scanner(Paths.get(PATH));
+			
+			CNFactory factory = CNFactory.getInstance("models");
+			
+			while(in.hasNextLine()){
+				text = in.nextLine();
+				if(text.isEmpty()){
+					continue;
+				}
+				DependencyTree tree = factory.parse2T(text);
+				result = tree.toList();
+				for(int i=0;i<result.size();i++){
+					System.out.println(result.get(i).toString());
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Finish!");
+	}
+
+}
