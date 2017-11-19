@@ -36,6 +36,5 @@ print('sub ”')
 print(cleaned[:100])
 
 
-
 with codecs.open('cleanluxun.txt', 'w', encoding='utf-8') as f:
 	f.write(cleaned)
