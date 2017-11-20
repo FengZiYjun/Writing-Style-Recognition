@@ -12,13 +12,13 @@ def text_clean(text):
 	# pattern = '(.*[WwｗＷ]{3}.*\n)|(^.*[小文].*[说学].*网.*$)'
 	cleaned = re.sub(pattern, '', text)
 	print('cleaned ads')
-	print(cleaned[:50])
+	#print(cleaned[:50])
 
 	# 除章名
 	pattern2 = r'(.*第.章.*\n)'
 	cleaned = re.sub(pattern2, '', cleaned)
 	print('cleaned captions')
-	print(cleaned[:50])
+	#print(cleaned[:50])
 
 	# 分句
 	endOfSentence = '。！？；'
@@ -30,11 +30,11 @@ def text_clean(text):
 	for item in endOfSentence:
 		pattern = r'(' + item + ')([^\n”])'
 		cleaned = re.sub(pattern, replacement, cleaned)
-		print('sub ' + item)
+		#print('sub ' + item)
 
 	cleaned = re.sub(r'([。！？]”)([^\n])', replacement, cleaned)
-	print('sub ”')
-	print(cleaned[:50])
+	#print('sub ”')
+	#print(cleaned[:50])
 
 	print('data cleaning done.')
 	return cleaned
