@@ -50,7 +50,7 @@ public class Test {
 	}
 	
 	public static void run(String filename){
-		final String PATH = "..\\LAB\\src\\output\\";
+		final String PATH = "..\\src\\output\\";
 		final String FILE = "cleaned_" + filename;
 		System.out.println("dealing with " + FILE);
 		
@@ -63,7 +63,7 @@ public class Test {
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(fileDirs), "UTF-8"));
 			
 			while( (text = in.readLine()) != null ){
-				if(text.isEmpty()){
+				if(text.isEmpty() || text.equals("")){
 					continue;
 				}
 				HashMap<String, Integer> dependencies = sentenceDep(text);
@@ -90,7 +90,10 @@ public class Test {
 			}
 			
 			PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(PATH + "depen_" + filename), "UTF-8")));
-			out.println(feat_distr.toString());
+			//out.println(feat_distr.toString());
+			for(String key : feat_distr.keySet()){
+				out.println(key + " " + feat_distr.get(key).toString());
+			}
 			out.close();
 			
 		} catch (Exception e) {

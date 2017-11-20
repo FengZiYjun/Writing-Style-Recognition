@@ -7,6 +7,13 @@ import data_cleaning
 def lexical_diversity(text):
     return len(set(text)) / len(text)
 
+def dict2string(dictionary):
+	string = ""
+	for key in dictionary:
+		string = string + str(key) + " " + str(dictionary[key]) + '\n'
+	return string
+
+
 def feature_extraction(text):
 
 	text = data_cleaning.text_clean(text)
@@ -51,6 +58,6 @@ def feature_extraction(text):
 		#print(item + 'count: ' + str(tmp))
 		features_dict[item] = tmp
 
-	return text, str(features_dict)
+	return text, dict2string(features_dict)
 
 	
