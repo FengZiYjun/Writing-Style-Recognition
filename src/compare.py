@@ -1,4 +1,5 @@
 import re
+import visualize as vs
 
 PATH = './output/'
 
@@ -33,7 +34,7 @@ def read_feat(filename):
 			value = line.split(' ')[1]
 			value = float(value)
 		ret[key] = value
-		print(key, value)
+		#print(key, value)
 	return ret
 
 
@@ -74,13 +75,16 @@ def score_float(f1, f2):
 
 
 def compare(dict1, dict2):
-	keys = list(dict1.keys())
+	keys = set(dict1.keys()).intersection(set(dict2.keys()))
 	score = 0.0
 	for key in keys:
-		if type(key) == list:
-			score += score_list(dict1[key], dict2[key])
+		add_score = 0.0
+		if type(dict1[key]) == list:
+			add_score += score_list(dict1[key], dict2[key])
 		else:
-			score += score_float(dict1[key], dict2[key])
+			add_score += score_float(dict1[key], dict2[key])
+		#print(key + ': ' + str(add_score))
+		score += add_score
 	return score
 
 
@@ -90,9 +94,11 @@ def compare(dict1, dict2):
 #print(feat2)
 #print(compare(feat2, feat2))
 
-def main():
-	filename1 = 
-	filename2 = 
-	feature_dict1 = merge(read_feat(filename1), read_depen(filename1))
-	feature_dict2 = merge(read_feat(filename2), read_depen(filename2))
-	compare(feature_dict1, feature_dict2)
+def main(args):
+	filename1 = args[0] + '.txt'
+	filename2 = args[1] + '.txt'
+	print('comparing ' + args[0] + ' and ' + args[1])
+	feature_dict1 = merge(read_feat(PATH + 'feat_' + filename1), read_depen(PATH + 'depen_' + filename1))
+	feature_dict2 = merge(read_feat(PATH + 'feat_' + filename2), read_depen(PATH + 'depen_' + filename2))
+	print('total score: ')
+	print(compare(feature_dict1, feature_dict2))

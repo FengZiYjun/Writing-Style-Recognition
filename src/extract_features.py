@@ -53,14 +53,14 @@ def feature_extraction(text):
 	# 统计标点
 	print('统计标点')
 	puctuation = '，。：？！“”…；、'
-	total = 0.0
+	total_puctuation = 0.0
 	for item in puctuation:
 		tmp = words.count(item)
 		#print(item + 'count: ' + str(tmp))
-		total += tmp
+		total_puctuation += tmp
 		features_dict[item] = tmp
-	for key in features_dict:
-		features_dict[key] = features_dict[key] / total
+	for key in puctuation:
+		features_dict[key] = features_dict[key] / total_puctuation
 
 	return text, dict2string(features_dict)
 
