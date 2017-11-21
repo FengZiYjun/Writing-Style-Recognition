@@ -47,16 +47,20 @@ def feature_extraction(text):
 	# 词汇丰富度
 	print('词汇丰富度')
 	words = [word for tag, word in cond_tuple_list]
-	print('total lexical_diversity: ' + str(lexical_diversity(words)))
-	features_dict['total lexical_diversity'] = lexical_diversity(words)
+	print('total_lexical_diversity: ' + str(lexical_diversity(words)))
+	features_dict['total_lexical_diversity'] = lexical_diversity(words)
 
 	# 统计标点
 	print('统计标点')
 	puctuation = '，。：？！“”…；、'
+	total = 0.0
 	for item in puctuation:
 		tmp = words.count(item)
 		#print(item + 'count: ' + str(tmp))
+		total += tmp
 		features_dict[item] = tmp
+	for key in features_dict:
+		features_dict[key] = features_dict[key] / total
 
 	return text, dict2string(features_dict)
 
