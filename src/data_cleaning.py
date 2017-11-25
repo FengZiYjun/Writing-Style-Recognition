@@ -8,20 +8,33 @@ import codecs
 def text_clean(text):
 	print('data cleaning...')
 	# 除广告
-	pattern = r'(.*[WwｗＷ]{3}.*\n)|(.*[小文].*[说学].*网.*\n)|(.*[Cc][Oo][Mm].*)'
+	pattern = r'(.*[WwｗＷ]{3}.*\n)|(.*[小文].*[说学].*网.*\n)|(.*[Cc][Oo][Mm].*)|(.*[Tt].?[xX].?[tT].*\n)|(.*5.*6.*\n)'
 	# pattern = '(.*[WwｗＷ]{3}.*\n)|(^.*[小文].*[说学].*网.*$)'
 	cleaned = re.sub(pattern, '', text)
 	print('cleaned ads')
-	#print(cleaned[:50])
 
 	# 除章名
-	pattern2 = r'(.*第.章.*\n)'
+	pattern2 = r'(.*第.*章.*\n)'
 	cleaned = re.sub(pattern2, '', cleaned)
 	print('cleaned captions')
-	#print(cleaned[:50])
+
+	# 除日期
+	pattern3 = r'(.*年..?月.*日\n)'
+	cleaned = re.sub(pattern3, '', cleaned)
+	print('cleaned dates')
+
+	# 除其他
+	pattern4 = r'(.*本篇最初发表于.*\n)'
+	cleaned = re.sub(pattern4, '', cleaned)
+	pattern5 = r'　　'
+	cleaned = re.sub(pattern5, '', cleaned)
+	pattern6 = r'    '
+	pattern7 = r'	　　'
+	cleaned = re.sub(pattern6, '', cleaned)
+	cleaned = re.sub(pattern7, '', cleaned)
 
 	# 分句
-	endOfSentence = '。！？；'
+	endOfSentence = '。！？；：'
 	# chin = '[\u4e00-\u9fa5]'
 
 	def replacement(matchObj):

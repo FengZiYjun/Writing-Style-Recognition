@@ -9,7 +9,7 @@ FOR %%X in ("%dir1%\*.txt") DO (
 	call set "Myvar=%%Myvar%%,%%~nX.txt"
 	)
 echo %Myvar:~1%
-python run.py %Myvar:~1%
+::python run.py %Myvar:~1%
 
 cd ..
 cd javanlp

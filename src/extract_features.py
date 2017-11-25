@@ -15,31 +15,66 @@ def dict2string(dictionary):
 
 
 def feature_extraction(text):
-
+	
+	features_dict = {}
 	lines = text.split('\n')
 
-	features_dict = {}
-
+	line_length = []
+	ques_sent = 0
+	emot_sent = 0
+	
 	# 分词，标记词性
 	print('正在分词...')
 	#new_text = ""
 	cond_tuple_list = []
 	for line in lines:
-		# seg_list = jieba.cut(line, cut_all=False)
-		# new_text = new_text + " ".join(seg_list) + '\n'
+		if line=="\n" or len(line)==0:
+			continue
+		line_length.append(len(line))
+		if line[-1] == "？":
+			ques_sent += 1
+		elif line[-1] == "！":
+			emot_sent += 1
+
 		result = pseg.cut(line)
 		for word, tag in result:
 			cond_tuple_list.append((tag, word))
 
-	# 不同词性高频词
-	print('正在收集高频词...')
+	print('疑问句和感叹句...')
+	features_dict['question'] = ques_sent / len(line_length)
+	features_dict['emotion'] = emot_sent / len(line_length)
+
+	print('计算句长...')
+	mean_length = sum(line_length) / len(line_length)
+	features_dict['mean_sent_length'] = mean_length
+	
+	print('计算长短句...')
+	print(features_dict['mean_sent_length'])
+	len_fdist = nltk.FreqDist(line_length)
+	long_setense = 0
+	short_sentense = 0
+	for length in len_fdist:
+		if length > 2 * mean_length:
+			long_setense += len_fdist[length]
+		if length < 0.5 * mean_length:
+			short_sentense += len_fdist[length]
+	features_dict['long_ratio'] = long_setense / len_fdist.N()
+	features_dict['short_ratio'] = short_sentense / len_fdist.N()
+
+
+	# 词性比例
+	print('正在计算词性比例...')
 	cfd = nltk.ConditionalFreqDist(cond_tuple_list)
+	total_words = cfd.N()
+	for tag in cfd.conditions():
+		features_dict['%' + tag] = sum(cnt for word, cnt in cfd[tag].most_common()) / total_words
+
+
+	# 高频虚词
+	print('正在收集高频虚词...')
 	useful_tags = ['p', 'c', 'e', 'u', 'y', 'f', 'z', 'd', 'v', 'a', 'ad']
-	#tags = cfd.conditions()
 	for each_tag in useful_tags:
-		#print(each_tag + ': ')
 		res = cfd[each_tag].most_common(10)
-		#print(res)
 		features_dict[each_tag] = cfd[each_tag].most_common(10)
 
 
@@ -48,6 +83,12 @@ def feature_extraction(text):
 	words = [word for tag, word in cond_tuple_list]
 	print('total_lexical_diversity: ' + str(lexical_diversity(words)))
 	features_dict['total_lexical_diversity'] = lexical_diversity(words)
+
+
+	# 单现词比例
+	print('计算单现词比例...')
+	fdist = nltk.FreqDist(words)
+	features_dict['once'] = list(fdist.values()).count(1) / len(fdist.values())
 
 	# 统计标点
 	"""
