@@ -24,6 +24,8 @@ java -classpath "./src/test/;./models/;./libs/fnlp-core-2.1-SNAPSHOT.jar;./libs/
 
 echo Encoding Succeed.
 
+cd ..
+cd src
 
 ::pause
 :::Start

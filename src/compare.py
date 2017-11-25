@@ -1,5 +1,6 @@
 import re
-import visualize as vs
+#import visualize as vs
+from scipy.spatial import distance
 
 PATH = './output/'
 
@@ -54,6 +55,7 @@ def merge(feat_dict, depen_dict):
 	return {**feat_dict, **depen_dict}
 
 
+
 def score_list(list1, list2):
 	weights = [1, 0.8, 0.5, 0.3, 0.1]
 	error = 0.0
@@ -88,17 +90,52 @@ def compare(dict1, dict2):
 	return score
 
 
+def normalize(dictionary):
+	total = 0.0
+	for key in list(dictionary.keys()):
+		total += dictionary[key]
+	for key in list(dictionary.keys()):
+		dictionary[key] = dictionary[key] / total
+	return dictionary
+
+def compute_distance(vec1, vec2):
+	return distance.cosine(vec1, vec2)
+
+def compare_depen(dict1, dict2):
+	score = 0.0
+	dict1 = normalize(dict1)
+	dict2 = normalize(dict2)
+	add_list = []
+	score = compute_distance(list(dict1.values()), list(dict2.values()))
+	return score, add_list
+
+
 #feat = read_feat(PATH + 'feat_liucixin.txt')
 #print(feat)
 #feat2 = read_depen(PATH + 'depen_liucixin.txt')
 #print(feat2)
 #print(compare(feat2, feat2))
 
+
+def compare_two_authors(author1, author2):
+	print('comparing ' + author1 + ' and ' + author2)
+	feature_dict1 = read_depen(PATH + 'depen_' + author1 + '.txt')
+	feature_dict2 = read_depen(PATH + 'depen_' + author2 + '.txt')
+	score, add_list = compare_depen(feature_dict1, feature_dict2)
+	add_list = sorted(add_list, key=lambda i:i[1] ,reverse=True)
+	return score
+
 def main(args):
-	filename1 = args[0] + '.txt'
-	filename2 = args[1] + '.txt'
-	print('comparing ' + args[0] + ' and ' + args[1])
-	feature_dict1 = merge(read_feat(PATH + 'feat_' + filename1), read_depen(PATH + 'depen_' + filename1))
-	feature_dict2 = merge(read_feat(PATH + 'feat_' + filename2), read_depen(PATH + 'depen_' + filename2))
-	print('total score: ')
-	print(compare(feature_dict1, feature_dict2))
+	#filename1 = args[0] + '.txt'
+	#filename2 = args[1] + '.txt'
+	author_names = ['luxun', 'zhouzuoren', 'linyutang', 'sanmao', 'wangxiaobo',
+	'liucixin']
+	result = []
+	for i in range(len(author_names)):
+		rec = list()
+		for j in range(i+1, len(author_names)):
+			rec.append(compare_two_authors(author_names[i], author_names[j]))
+		result.append(rec)
+	print(result)
+
+main(0)

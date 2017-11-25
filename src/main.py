@@ -1,4 +1,5 @@
 import extract_features as ef
+import data_cleaning
 
 OUTPUT = './output/'
 INPUT = './input/'
@@ -24,7 +25,8 @@ def main(filenames):
 		print('dealing with ' + INPUT + filename)
 
 		text = read_file(INPUT + filename)
-		cleaned_text, features = ef.feature_extraction(text)
+		cleaned_text = data_cleaning.text_clean(text)
+		features = ef.feature_extraction(cleaned_text)
 		
 		save_file(OUTPUT + 'cleaned_' + filename, cleaned_text)
 		save_file(OUTPUT + 'feat_' + filename, features)
