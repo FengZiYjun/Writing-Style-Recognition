@@ -3,6 +3,8 @@ echo start comparing
 
 set "dir=.\input"
 
+:: compare two by two
+
 FOR %%X in ("%dir%\*.txt") DO (
 	echo %%~nX
 	FOR %%Y in ("%dir%\*.txt") DO (

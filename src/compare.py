@@ -1,5 +1,6 @@
+#coding:utf-8
 import re
-#import visualize as vs
+import visualize as vs
 from scipy.spatial import distance
 
 PATH = './output/'
@@ -52,7 +53,7 @@ def read_depen(filename):
 
 
 def merge(feat_dict, depen_dict):
-	return {**feat_dict, **depen_dict}
+	return feat_dict.update(depen_dict)
 
 
 
@@ -91,9 +92,7 @@ def compare(dict1, dict2):
 
 
 def normalize(dictionary):
-	total = 0.0
-	for key in list(dictionary.keys()):
-		total += dictionary[key]
+	total = sum(dictionary.values())
 	for key in list(dictionary.keys()):
 		dictionary[key] = dictionary[key] / total
 	return dictionary
@@ -109,14 +108,6 @@ def compare_depen(dict1, dict2):
 	score = compute_distance(list(dict1.values()), list(dict2.values()))
 	return score, add_list
 
-
-#feat = read_feat(PATH + 'feat_liucixin.txt')
-#print(feat)
-#feat2 = read_depen(PATH + 'depen_liucixin.txt')
-#print(feat2)
-#print(compare(feat2, feat2))
-
-
 def compare_two_authors(author1, author2):
 	print('comparing ' + author1 + ' and ' + author2)
 	feature_dict1 = read_depen(PATH + 'depen_' + author1 + '.txt')
@@ -125,17 +116,49 @@ def compare_two_authors(author1, author2):
 	add_list = sorted(add_list, key=lambda i:i[1] ,reverse=True)
 	return score
 
+def author_info():
+	author_names = ['luxun', 'zhouzuoren', 'linyutang', 'sanmao', 'wangxiaobo',
+	'liucixin', 'shitiesheng']
+	chin_names = ['鲁迅', '周作人', '林语堂','三毛','王小波','刘慈欣','史铁生']
+	for author, chin_name in zip(author_names, chin_names):
+		au_dict = read_depen(PATH + 'depen_' + author + '.txt')
+		vs.pie(au_dict, chin_name)
+
+def extract_tag_word(dictionary):
+	useful_tags = ['p', 'c', 'e', 'u', 'y', 'f', 'z', 'd', 'v', 'a', 'ad']
+	return {tag:dictionary[tag] for tag in useful_tags}
+	#tag_dict = {}
+	#for tag in useful_tags:
+	#	tag_dict[tag] = dictionary[tag]
+	#return tag_dict
+
+def extract_tag_ratio(dictionary):
+	return {key[1:]:dictionary[key] for key in dictionary if key[0] is '%'}
+	#tag_ratio_dict = {}
+	#for key in list(dictionary.keys()):
+	#	if key[0] is '%':
+	#		tag_ratio_dict[key[1:]] = dictionary[key]
+	#return tag_ratio_dict
+
+def decode_tag(dictionary):
+	
+
+
+def draw_tag_ratio():
+	author_names = ['luxun', 'zhouzuoren', 'linyutang', 'sanmao', 'wangxiaobo',
+	'liucixin', 'shitiesheng']
+	chin_names = ['鲁迅', '周作人', '林语堂','三毛','王小波','刘慈欣','史铁生']
+	for author, chin_name in zip(author_names, chin_names):
+		au_dict = read_feat(PATH + 'feat_' + author + '.txt')
+		au_dict = extract_tag_ratio(au_dict)
+		vs.pie(au_dict, chin_name, '词性比例')
+
 def main(args):
 	#filename1 = args[0] + '.txt'
 	#filename2 = args[1] + '.txt'
 	author_names = ['luxun', 'zhouzuoren', 'linyutang', 'sanmao', 'wangxiaobo',
-	'liucixin']
-	result = []
-	for i in range(len(author_names)):
-		rec = list()
-		for j in range(i+1, len(author_names)):
-			rec.append(compare_two_authors(author_names[i], author_names[j]))
-		result.append(rec)
-	print(result)
+	'liucixin', 'shitiesheng']
+	#author_info()
+	draw_tag_ratio()
 
 main(0)
