@@ -1,4 +1,4 @@
-package test;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -83,7 +83,7 @@ public class Test {
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(fileDirs), "UTF-8"));
 			
 			while( (text = in.readLine()) != null ){
-				if(text.isEmpty() || text.equals("")){
+				if(text.isEmpty() || text.equals("") ||text.equals("\n")){
 					continue;
 				}
 				try {
@@ -94,7 +94,7 @@ public class Test {
 							features.put(key, features.get(key) + dependencies.get(key));
 					}
 				} catch (Exception e) {
-					//e.printStackTrace();
+					e.printStackTrace();
 					continue;
 				}
 			}
@@ -121,8 +121,8 @@ public class Test {
 	
 	public static void main(String[] args) { 
 		// TODO Auto-generated method stub
-		//String[] files = split(args[0]);
-		String[] files = split("luxun.txt");
+		String[] files = split(args[0]);
+		//String[] files = split("luxun.txt");
 		for(String file : files){
 			run(file);
 		}

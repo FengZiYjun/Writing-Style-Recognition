@@ -74,7 +74,6 @@ def feature_extraction(text):
 	print('正在收集高频虚词...')
 	useful_tags = ['p', 'c', 'e', 'u', 'y', 'f', 'z', 'd', 'v', 'a', 'ad']
 	for each_tag in useful_tags:
-		res = cfd[each_tag].most_common(10)
 		features_dict[each_tag] = cfd[each_tag].most_common(10)
 
 

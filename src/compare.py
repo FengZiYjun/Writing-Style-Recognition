@@ -1,9 +1,42 @@
 #coding:utf-8
 import re
 import visualize as vs
+import excel
 from scipy.spatial import distance
 
 PATH = './output/'
+
+author_names = ['luxun', 'zhouzuoren', 'linyutang', 'sanmao', 'wangxiaobo',
+	'liucixin', 'shitiesheng']
+chin_names = ['鲁迅', '周作人', '林语堂', '三毛','王小波','刘慈欣','史铁生']
+
+tag_mapping = {'a':'形容词','ad':'副形词','ag':'形容词性语素','an':'名形词',
+	'b':'区别词',
+	'c':'连词',
+	'd':'副词', 'df':'副词','dg':'副语素',
+	'e':'叹词',
+	'eng':'外语',
+	'f':'方位词',
+	'g':'语素',
+	'h':'前接成分',
+	'i':'成语',
+	'j':'简称略语',
+	'k':'后接成分',
+	'l':'习用语',
+	'm':'数词', 'mg':'数语素','mq':'数词',
+	'n':'名词', 'ns':'地名', 'nr':'人名', 'nt':'机构名','nz':'其他专名','ng':'名语素','nrfg':'名词','nrt':'名词',
+	'o':'拟声词',
+	'p':'介词',
+	'q':'量词',
+	'r':'代词',
+	's':'处所词',
+	't':'时间词', 'tg':'时间素',
+	'u':'助词','uj':'助词','ug':'助词','ud':'助词','ul':'助词','uv':'助词','uz':'助词',
+	'v':'动词', 'vn':'名动词','vd':'副动词','vg':'动语素','vq':'动词',
+	'w':'标点符号',
+	'x':'非语素字','y':'语气词',
+	'z':'状态词','zg':'状态词'
+	}
 
 
 def makeTupleList(string):
@@ -28,7 +61,7 @@ def read_feat(filename):
 		try:
 			i = line.index('[')
 			if i - 1 >= 1:
-				key = line[:i]
+				key = line[:i-1]
 				value = line[i:]
 			value = makeTupleList(value)
 		except:
@@ -50,12 +83,6 @@ def read_depen(filename):
 		tmp = line.split(' ')
 		ret[tmp[0]] = float(tmp[1])
 	return ret
-
-
-def merge(feat_dict, depen_dict):
-	return feat_dict.update(depen_dict)
-
-
 
 def score_list(list1, list2):
 	weights = [1, 0.8, 0.5, 0.3, 0.1]
@@ -117,9 +144,6 @@ def compare_two_authors(author1, author2):
 	return score
 
 def author_info():
-	author_names = ['luxun', 'zhouzuoren', 'linyutang', 'sanmao', 'wangxiaobo',
-	'liucixin', 'shitiesheng']
-	chin_names = ['鲁迅', '周作人', '林语堂','三毛','王小波','刘慈欣','史铁生']
 	for author, chin_name in zip(author_names, chin_names):
 		au_dict = read_depen(PATH + 'depen_' + author + '.txt')
 		vs.pie(au_dict, chin_name)
@@ -127,38 +151,75 @@ def author_info():
 def extract_tag_word(dictionary):
 	useful_tags = ['p', 'c', 'e', 'u', 'y', 'f', 'z', 'd', 'v', 'a', 'ad']
 	return {tag:dictionary[tag] for tag in useful_tags}
-	#tag_dict = {}
-	#for tag in useful_tags:
-	#	tag_dict[tag] = dictionary[tag]
-	#return tag_dict
+
 
 def extract_tag_ratio(dictionary):
-	return {key[1:]:dictionary[key] for key in dictionary if key[0] is '%'}
-	#tag_ratio_dict = {}
-	#for key in list(dictionary.keys()):
-	#	if key[0] is '%':
-	#		tag_ratio_dict[key[1:]] = dictionary[key]
-	#return tag_ratio_dict
-
-def decode_tag(dictionary):
+	tmp = {key[1:]:dictionary[key] for key in dictionary if key[0] is '%'}
 	
+	new_dict = {}
+	for item in tmp:
+		tag = tag_mapping[item[0]]
+		if tag in list(new_dict.keys()):
+			new_dict[tag] = new_dict[tag] + tmp[item]
+		else:
+			new_dict[tag] = tmp[item]
+	return new_dict
 
+def extract_feat_num(dictionary):
+	mapping = {'question':'疑问句比例','emotion':'感叹句比例','mean_sent_length':'平均句长','short_ratio':'短句比例','long_ratio':'长句比例',
+	'total_lexical_diversity':'词汇丰富度','once':'单现词比例'}	
+	ret =  {mapping[key]:dictionary[key] for key in dictionary if type(dictionary[key]) is not list and key[0] is not '%'}
+	
+	return ret, ret.keys()
 
 def draw_tag_ratio():
-	author_names = ['luxun', 'zhouzuoren', 'linyutang', 'sanmao', 'wangxiaobo',
-	'liucixin', 'shitiesheng']
-	chin_names = ['鲁迅', '周作人', '林语堂','三毛','王小波','刘慈欣','史铁生']
+	data = []
 	for author, chin_name in zip(author_names, chin_names):
 		au_dict = read_feat(PATH + 'feat_' + author + '.txt')
 		au_dict = extract_tag_ratio(au_dict)
-		vs.pie(au_dict, chin_name, '词性比例')
+		#excel.save_dict(au_dict, chin_name+'作品词性比例')
+		#vs.pie(au_dict, chin_name, '作品词性比例')
+		data.append([au_dict.get(key, 0) for key in list(tag_mapping.values())])
+	excel.save_table(data, list(tag_mapping.values()), chin_names, '词性比例总表')
+
+def draw_table():
+	data = []
+	colLabels = []
+	for author, chin_name in zip(author_names, chin_names):
+		au_dict = read_feat(PATH + 'feat_' + author + '.txt')
+		au_dict, colLabels = extract_feat_num(au_dict)
+		data.append(list(au_dict.values()))
+		#print(au_dict)
+	excel.save_table(data, list(colLabels), chin_names, '特征统计表')
+
+def make_word_cloud():
+	author_names = ['shitiesheng']
+	chin_names = ['史铁生']
+	for author, chin_name in zip(author_names, chin_names):
+		au_dict = read_feat(PATH + 'feat_' + author + '.txt')
+		# extract the frequency list & mapping into chinese keys
+		au_dict = {tag_mapping[key]:au_dict[key] for key in list(au_dict.keys()) if type(au_dict[key]) is list}
+		for key in au_dict.keys():
+			if len(au_dict[key]) != 0:
+				vs.cloud({item[0]:item[1] for item in au_dict[key]}, chin_name, '作品' + key + '词云')
+
+def draw_depen_table():
+	data = []
+	for author, chin_name in zip(author_names, chin_names):
+		au_dict = read_depen(PATH + 'depen_' + author + '.txt')
+		data.append(list(au_dict.values()))
+		#print(au_dict)
+	excel.save_table(data, list(au_dict.keys()), chin_names, '句法依存标注统计表')
+
 
 def main(args):
 	#filename1 = args[0] + '.txt'
 	#filename2 = args[1] + '.txt'
-	author_names = ['luxun', 'zhouzuoren', 'linyutang', 'sanmao', 'wangxiaobo',
-	'liucixin', 'shitiesheng']
+
 	#author_info()
-	draw_tag_ratio()
+	#draw_tag_ratio()
+	#draw_table()
+	#make_word_cloud()
+	draw_depen_table()
 
 main(0)

@@ -4,11 +4,23 @@ import matplotlib.pyplot as plt
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
 import numpy as np
-#from wordcloud import WordCloud
+from wordcloud import WordCloud
 #from os import path
 #from pillow import Image
 
 PATH = './output/'
+
+def table(data, colLabels, rowLabels, title):
+	# data ---- 2-D list
+	fig, ax = plt.subplots()
+	colors = plt.cm.BuPu(np.linspace(0, 0.5, len(rowLabels)))
+	ax.table(cellText = data, rowLabels=rowLabels, colLabels=colLabels,
+			rowColours=colors, loc='center')
+	plt.title( u'' + title)
+	fig.tight_layout()
+	plt.savefig(PATH  + title + '.jpg')
+	print('matplotlib figure saved: '  + title + '.jpg')
+
 
 def pie(dictionary, name, title):
 	labels = list(dictionary.keys())
@@ -28,7 +40,7 @@ def pie(dictionary, name, title):
 	print('matplotlib figure saved: ' + name + title + '.jpg')
 
 
-def hist(dictionary):
+def hist(dictionary, name, title):
 	labels = tuple(dictionary.keys())
 	print(labels)
 	values = [dictionary[key] for key in labels]
@@ -44,17 +56,24 @@ def hist(dictionary):
 	ax.set_xlabel('values')
 	ax.set_title('Key-Values')
 	plt.show()
+	plt.title(name + u'' + title)
+	plt.savefig(PATH + name + title + '.jpg')
 
-"""
-def cloud(dictionary):
-	text = " ".join([((key + ' ') * dictionary[key])  for key in list(dictionary.keys())])
-	print(text)
-	my_wordcloud = WordCloud().generate(text)
+
+def cloud(dictionary, name, title):
+	if dictionary is None:
+		print('Empty dictionary!')
+		return
+	font = r'C:\Windows\Fonts\simfang.ttf'
+	my_wordcloud = WordCloud(background_color="white",collocations=False, font_path=font).generate_from_frequencies(dictionary)
 	plt.figure()
 	plt.imshow(my_wordcloud, interpolation='bilinear')
 	plt.axis('off')
-	plt.show()
-"""
+	plt.title(name + u'' + title)
+	plt.savefig(PATH + name + title + '.jpg')
+	plt.close()
+	print('matplotlib figure saved: ' + name + title + '.jpg')
+
 """
 # to be tested
 def freeCloud(dictionary):
@@ -74,4 +93,13 @@ def test():
 
 test()
 
+"""
+"""
+text = {'在':43, '哈':34}
+font = r'C:/Windows/Fonts/simsun.ttc'
+my_wordcloud = WordCloud(background_color="white", font_path=font, stopwords=set('hey'), random_state=42, collocations=False, normalize_plurals=False).generate_from_frequencies(text)
+plt.figure()
+plt.imshow(my_wordcloud, interpolation='bilinear')
+plt.axis('off')
+plt.show()
 """
