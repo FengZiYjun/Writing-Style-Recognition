@@ -55,7 +55,7 @@ def hist(dictionary, name, title):
 	ax.invert_yaxis()  # labels read top-to-bottom
 	ax.set_xlabel('values')
 	ax.set_title('Key-Values')
-	plt.show()
+	#plt.show()
 	plt.title(name + u'' + title)
 	plt.savefig(PATH + name + title + '.jpg')
 
