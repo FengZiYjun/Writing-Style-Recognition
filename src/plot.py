@@ -1,8 +1,7 @@
 #coding:utf-8
 import re
-import visualize as vs
+#import visualize as vs
 import excel
-from scipy.spatial import distance
 
 PATH = './output/'
 INPUT = './input/'
@@ -91,8 +90,15 @@ def author_info():
 		vs.pie(au_dict, chin_name)
 
 def extract_tag_word(dictionary):
+	# 抽取高频功能词列表
 	useful_tags = ['p', 'c', 'e', 'u', 'y', 'f', 'z', 'd', 'v', 'a', 'ad']
 	return {tag:dictionary[tag] for tag in useful_tags}
+
+def extract_freq_tag_ratio(dictionary):
+	# 抽取高频功能词的比例
+	tmp = {key[1:]:dictionary[key] for key in dictionary if key[0] is '%'}
+	useful_tags = ['p', 'c', 'e', 'u', 'y', 'f', 'z', 'd', 'v', 'a', 'ad']
+	return {item: tmp.get(item, 0) for item in useful_tags}
 
 
 def extract_tag_ratio(dictionary):
@@ -100,6 +106,7 @@ def extract_tag_ratio(dictionary):
 	tmp = {key[1:]:dictionary[key] for key in dictionary if key[0] is '%'}
 	new_dict = {}
 	for item in tmp:
+		# 只选取词性的大类
 		tag = tag_mapping[item[0]]
 		if tag in list(new_dict.keys()):
 			new_dict[tag] = new_dict[tag] + tmp[item]
@@ -107,12 +114,13 @@ def extract_tag_ratio(dictionary):
 			new_dict[tag] = tmp[item]
 	return new_dict
 
+
 def extract_feat_num(dictionary):
 	# 抽取其他特征数据
 	mapping = {'question':'疑问句比例','emotion':'感叹句比例','mean_sent_length':'平均句长','short_ratio':'短句比例','long_ratio':'长句比例',
 	'total_lexical_diversity':'词汇丰富度','once':'单现词比例'}	
-	ret =  {mapping[key]:dictionary[key] for key in dictionary if type(dictionary[key]) is not list and key[0] is not '%'}
-	
+	#ret =  {mapping[key]:dictionary[key] for key in dictionary if type(dictionary[key]) is not list and key[0] is not '%'}
+	ret = {mapping[key]: dictionary.get(key, 0) for key in mapping}
 	return ret, ret.keys()
 
 def draw_tag_ratio():
