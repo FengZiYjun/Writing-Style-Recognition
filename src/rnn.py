@@ -32,7 +32,7 @@ y = layer(x)
 
 # Here's how to use the cell to build a stacked RNN:
 
-cells = [MinimalRNNCell(32), MinimalRNNCell(64)]
+cells = [ (32), MinimalRNNCell(64)]
 x = keras.Input((None, 5))
 layer = RNN(cells)
 y = layer(x)

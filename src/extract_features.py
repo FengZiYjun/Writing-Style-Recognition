@@ -49,7 +49,6 @@ def feature_extraction(text):
 	features_dict['mean_sent_length'] = mean_length
 	
 	print('计算长短句...')
-	print(features_dict['mean_sent_length'])
 	len_fdist = nltk.FreqDist(line_length)
 	long_setense = 0
 	short_sentense = 0
@@ -80,7 +79,7 @@ def feature_extraction(text):
 	# 词汇丰富度
 	print('词汇丰富度')
 	words = [word for tag, word in cond_tuple_list]
-	print('total_lexical_diversity: ' + str(lexical_diversity(words)))
+	# print('total_lexical_diversity: ' + str(lexical_diversity(words)))
 	features_dict['total_lexical_diversity'] = lexical_diversity(words)
 
 

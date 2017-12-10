@@ -1,6 +1,5 @@
 import extract_features as ef
 import data_cleaning
-import plot
 
 OUTPUT = './output/'
 INPUT = './input/'
@@ -28,6 +27,7 @@ def split_text(text):
 	return  split_list
 
 def main(filenames):
+	# receive arguments from run.py
 
 	#-------------------- Encoding ------------------------
 	
@@ -37,6 +37,7 @@ def main(filenames):
 
 		text = read_file(INPUT + filename)
 		cleaned_text = data_cleaning.text_clean(text)
+
 		# 作为统计的度量，对整个文本抽取feature
 		features = ef.feature_extraction(cleaned_text)
 		
@@ -46,9 +47,9 @@ def main(filenames):
 		
 		# text = read_file('./output/cleaned_' + filename)
 		
-		text = cleaned_text
 		# return list of string
-		file_list = split_text(text)
+		file_list = split_text(cleaned_text)
+		
 		cnt = 0
 		author = filename[:-4]
 		for file_text in file_list:

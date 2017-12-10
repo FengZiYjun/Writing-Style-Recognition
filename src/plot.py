@@ -89,6 +89,10 @@ def author_info():
 		au_dict = read_depen(PATH + 'depen_' + author + '.txt')
 		vs.pie(au_dict, chin_name)
 
+
+# ---------------------- Feature Extractor ---------------------
+
+
 def extract_tag_word(dictionary):
 	# 抽取高频功能词列表
 	useful_tags = ['p', 'c', 'e', 'u', 'y', 'f', 'z', 'd', 'v', 'a', 'ad']
@@ -123,6 +127,10 @@ def extract_feat_num(dictionary):
 	ret = {mapping[key]: dictionary.get(key, 0) for key in mapping}
 	return ret, ret.keys()
 
+# --------------------------------- End -------------------------------
+
+# -------------------------- Drawing Functions --------------------
+
 def draw_tag_ratio():
 	data = []
 	for author, chin_name in zip(author_names, chin_names):
@@ -132,6 +140,7 @@ def draw_tag_ratio():
 		vs.pie(au_dict, chin_name, '作品词性比例')
 		data.append([au_dict.get(key, 0) for key in list(tag_mapping.values())])
 	excel.save_table(data, list(tag_mapping.values()), chin_names, '词性比例总表')
+
 
 def draw_feat_table():
 	data = []
@@ -160,6 +169,10 @@ def draw_depen_table():
 		#print(au_dict)
 	excel.save_table(data, list(au_dict.keys()), chin_names, '句法依存标注统计表')
 
+# ------------------------------ End -----------------------------------
+
+
+# -------------- main control -------------------
 
 def plot_main(filenames):
 	file_list = filenames.split(',')
@@ -167,8 +180,8 @@ def plot_main(filenames):
 	author_names = [file[:-4] for file in file_list]
 
 	# if chinese author names provided
-	global chin_names
-	chin_names = author_names
+#	global chin_names
+#	chin_names = author_names
 
 
 	author_info()
