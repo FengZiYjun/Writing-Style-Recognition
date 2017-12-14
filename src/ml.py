@@ -1,18 +1,19 @@
 import os
-from plot import extract_feat_num,extract_freq_tag_ratio, read_feat
+from plot import extract_feat_num,extract_freq_tag_ratio, read_feat, read_depen
 import numpy as np
 import matplotlib.pyplot as plt
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
 import itertools
+from compare import normalize
 OUTPUT = './output/'
 
 
-def dict2row(dictionary):
+def dict2row(feat_dict, depen_dict):
 	# 不考虑高频词
-	tmp1 = extract_feat_num(dictionary)[0]
-	tmp2 = extract_freq_tag_ratio(dictionary)
-	tmp_dict = {**tmp1, **tmp2}
+	tmp1 = extract_feat_num(feat_dict)[0]
+	tmp2 = extract_freq_tag_ratio(feat_dict)
+	tmp_dict = {**tmp1, **tmp2, **normalize(depen_dict)}
 	#print(len(tmp1.values()), len(tmp2.values()))
 	return list(tmp_dict.values())
 
@@ -33,17 +34,17 @@ def make_input(author):
 	# load train files
 	#print(str(cnt - test_num) + ' files for training.')
 	for i in range(cnt - test_num):
-		filename = OUTPUT + 'feat_' + author + str(i) + '.txt'
-		feat_dict = read_feat(filename)
-		row = dict2row(feat_dict)
+		feat_file = OUTPUT + 'feat_' + author + str(i) + '.txt'
+		depen_file = OUTPUT + 'depen_' + author + str(i) + '.txt'
+		row = dict2row(feat_dict, read_depen(depen_file))
 		list_of_train.append(row)
 
 	# load test files
 	#print(str(test_num) + ' files for testing.')
 	for i in range(cnt - test_num, cnt):
-		filename = OUTPUT + 'feat_' + author + str(i) + '.txt'
-		feat_dict = read_feat(filename)
-		row = dict2row(feat_dict)
+		feat_file = OUTPUT + 'feat_' + author + str(i) + '.txt'
+		depen_file = OUTPUT + 'depen_' + author + str(i) + '.txt'
+		row = dict2row(feat_dict, read_depen(depen_file))
 		list_of_test.append(row)
 
 	return np.array(list_of_train), np.array(list_of_test)

@@ -32,6 +32,7 @@ def main(filenames):
 	#-------------------- Encoding ------------------------
 	
 	file_list = filenames.split(',')
+	author_filecnt = dict()
 	for filename in file_list:
 		print('dealing with ' + INPUT + filename)
 
@@ -44,8 +45,6 @@ def main(filenames):
 		# save as the whole long text
 		save_file(OUTPUT + 'cleaned_' + filename, cleaned_text)
 		save_file(OUTPUT + 'all_feat_' + filename, features)
-		
-		# text = read_file('./output/cleaned_' + filename)
 		
 		# return list of string
 		file_list = split_text(cleaned_text)
@@ -62,6 +61,10 @@ def main(filenames):
 			# save the feature of a single split text
 			save_file(OUTPUT + 'feat_' + author + str(cnt) + '.txt', file_features)
 			cnt += 1
+		author_filecnt[filename] = cnt
+
+	save_file(OUTPUT + 'prime.txt', 
+		'\n'.join([str(key) + ' ' + str(value) for key, value in author_filecnt.items()]))
 
 	# the whole cleaned text is 'cleaned_author.txt' ----- for java program
 	# features of the whole text is 'all_feat_author.txt' ------ for statistic ploting
