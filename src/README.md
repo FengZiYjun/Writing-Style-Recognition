@@ -1,4 +1,4 @@
-# Chinese authors' Writing Style Recognition
+# Chinese Authors' Writing Style Recognition
 
 ### Requirements
 - Python 3.6
