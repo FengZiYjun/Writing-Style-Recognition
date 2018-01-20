@@ -179,8 +179,14 @@ public class Test {
 			
 			for (Integer cnt = 0; cnt < prime.get(author); cnt++) {
 				
-				System.out.println("dealing with cleaned_" + author + cnt.toString() + ".txt...");
-				encodeSingleFile("cleaned_" + author + cnt.toString() + ".txt", author + cnt.toString());
+				String filename = "cleaned_" + author;
+				if(!args[0].equals("t")){
+					filename += cnt.toString() + ".txt";
+				}else{
+					filename += ".txt";
+				}
+				System.out.println("dealing with " + filename);
+				encodeSingleFile(filename, author + cnt.toString());
 			}
 		}
 

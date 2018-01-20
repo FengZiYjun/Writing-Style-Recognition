@@ -33,7 +33,10 @@ def main(filenames):
 	
 	file_list = filenames.split(',')
 	author_filecnt = dict()
+	
 	for filename in file_list:
+		if filename[-4:] != '.txt':
+			filename = filename + '.txt'
 		print('dealing with ' + INPUT + filename)
 
 		text = read_file(INPUT + filename)
