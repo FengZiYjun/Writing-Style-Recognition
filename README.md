@@ -1,4 +1,4 @@
-# Chinese Authors' Writing Style Recognition
+# Writing Style Recognition for Chinese Authors
 
 ### Requirements
 - Python 3.6
@@ -11,6 +11,7 @@
 - sklearn
 
 ### Setup
+
 0. Enter the `/src/` folder.
 1. Put the `.txt` files, each of which contains all the text from one author, under the `./input/` folder.
 2. If you are working on Windows, run `run.bat` in the cmd or just double click it. 
@@ -33,6 +34,9 @@ Files generated are
 3. After that, run `plot.bat` will launch the script for plotting related infomation in the `./output/` folder.
 
 If you are working on other OS, sorry, no batch processing is available yet.
+The set up procedure was only tested on Windows 8.1. There is no guarentee for cross-platform.
 
 
-
+### Test
+1. Put the text file to be tested in `./test/` folder.
+2. run the batch file `test.bat`.
